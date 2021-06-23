@@ -21,16 +21,14 @@ elif is_py3:
 
 def check_redundant(model_stack, stack_limit):
     stop_recursion = False
-    if len(model_stack) > stack_limit:
-        # rudimentary CustomUser->User->CustomUser->User detection, or
-        # stack depth shouldn't exceed x, or
-        # we've hit a point where we are repeating models
-        if (
-            (model_stack[-3] == model_stack[-1]) or
-            (len(model_stack) > 5) or
-            (len(set(model_stack)) != len(model_stack))
-        ):
-            stop_recursion = True
+    if len(model_stack) > stack_limit and (
+        (
+            (model_stack[-3] == model_stack[-1])
+            or (len(model_stack) > 5)
+            or (len(set(model_stack)) != len(model_stack))
+        )
+    ):
+        stop_recursion = True
     return stop_recursion
 
 
@@ -44,27 +42,22 @@ def get_field_name(field, RelatedObject):
 
 def get_full_field(parent_field, field_name):
     if parent_field:
-        full_field = "__".join([parent_field, field_name])
+        return "__".join([parent_field, field_name])
     else:
-        full_field = field_name
-    return full_field
+        return field_name
 
 
 def get_rel_model(field, RelatedObject):
     if isinstance(field, RelatedObject):
-        RelModel = field.model
-        # field_names.extend(get_fields(RelModel, full_field, True))
+        return field.model
+            # field_names.extend(get_fields(RelModel, full_field, True))
     else:
-        RelModel = field.related_model
-    return RelModel
+        return field.related_model
 
 
 def is_valid_instance(field):
-    return (
-        isinstance(field, ForeignKey) or
-        isinstance(field, OneToOneField) or
-        isinstance(field, RelatedObject) or
-        isinstance(field, ManyToManyField)
+    return isinstance(
+        field, (ForeignKey, OneToOneField, RelatedObject, ManyToManyField)
     )
 
 

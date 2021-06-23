@@ -32,8 +32,7 @@ def message_class_for(name):
     path = configured_message_classes()[name]
     mod_name, klass_name = path.rsplit('.', 1)
     mod = import_module(mod_name)
-    klass = getattr(mod, klass_name)
-    return klass
+    return getattr(mod, klass_name)
 
 
 class DripMessage(object):
@@ -85,13 +84,12 @@ class DripMessage(object):
 
     def get_from_(self):
         if self.drip_base.from_email_name:
-            from_ = "%s <%s>" % (
+            return "%s <%s>" % (
                 self.drip_base.from_email_name,
                 self.drip_base.from_email,
             )
         else:
-            from_ = self.drip_base.from_email
-        return from_
+            return self.drip_base.from_email
 
     @property
     def message(self):
@@ -223,9 +221,7 @@ class DripBase(object):
             return None
 
         self.prune()
-        count = self.send()
-
-        return count
+        return self.send()
 
     def prune(self):
         """
