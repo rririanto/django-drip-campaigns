@@ -41,11 +41,8 @@ def process_string(string):
         r'(?P<minutes>\d+)(:(?P<seconds>\d+(\.\d+)?))?$',
         str(string),
     )
-    if d:
-        d = process_regex(d)
-    else:
-        d = get_flexible_regex(string)
-    return datetime.timedelta(**dict(((k, float(v)) for k, v in d.items())))
+    d = process_regex(d) if d else get_flexible_regex(string)
+    return datetime.timedelta(**{k: float(v) for k, v in d.items()})
 
 
 def parse(string):

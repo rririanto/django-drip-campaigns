@@ -45,24 +45,14 @@ class Drip(models.Model):
     def drip(self):
         from drip.drips import DripBase
 
-        drip = DripBase(
+        return DripBase(
             drip_model=self,
             name=self.name,
-            from_email=self.from_email if self.from_email else None,
-            from_email_name=self.from_email_name if (
-                self.from_email_name
-            )
-            else None,
-            subject_template=self.subject_template if (
-                self.subject_template
-            )
-            else None,
-            body_template=self.body_html_template if (
-                self.body_html_template
-            )
-            else None
+            from_email=self.from_email or None,
+            from_email_name=self.from_email_name or None,
+            subject_template=self.subject_template or None,
+            body_template=self.body_html_template or None,
         )
-        return drip
 
     def __str__(self):
         return self.name
@@ -218,9 +208,7 @@ class QuerySetRule(models.Model):
 
         field_value = self.set_booleans(field_value)
 
-        kwargs = {field_name: field_value}
-
-        return kwargs
+        return {field_name: field_value}
 
     def apply(self, qs, now=datetime.now):
 
